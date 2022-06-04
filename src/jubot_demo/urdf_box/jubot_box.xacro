@@ -1,0 +1,47 @@
+
+<robot name="jubox" xmlns:xacro="http://wiki.ros.org/xacro">
+<!--wheel-->
+    <xacro:property name="wheel_radius" value="0.13" />
+    <xacro:property name="wheel_length" value="0.04" />
+    <xacro:property name="wheel_mass" value="0.05" />
+
+    <xacro:property name="PI" value="3.1415927" />
+
+<xacro:macro name="wheel_func" params="wheel_name flag1 flag2">
+
+    <joint name="${wheel_name}_joint" type="continuous">   
+        <origin xyz="${0.20*flag2} ${0.298*flag1} 0.07" rpy="${PI/2} 0.0 0.0"/> 
+        <parent link="base_link"/>  
+        <child link="${wheel_name}_link"/> 
+        <axis xyz="0 0 1"/>  
+    </joint>
+
+    <link name="${wheel_name}_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+            </geometry>
+            <material name="black">
+                <color rgba="0 0 0 1"/>
+            </material>
+        </visual>
+    <collision>
+        <geometry>  
+            <cylinder radius="${wheel_radius}" length="${wheel_length}"/>             
+        </geometry>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/> 
+    </collision>
+    <xacro:cylinder_inertial_matrix m="${wheel_mass}" r="${wheel_radius}" h="${wheel_length}" />    
+    </link>
+    <gazebo reference="${wheel_name}_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+</xacro:macro>   
+
+    <xacro:wheel_func wheel_name="left_back" flag1="1" flag2="-1"/>
+    <xacro:wheel_func wheel_name="right_back" flag1="-1" flag2="-1"/>
+    <xacro:wheel_func wheel_name="left_front" flag1="1" flag2="1"/>
+    <xacro:wheel_func wheel_name="right_front" flag1="-1" flag2="1"/>
+</robot>
